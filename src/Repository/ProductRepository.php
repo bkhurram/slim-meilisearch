@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App;
+namespace App\Repository;
 
 use PDO;
 
@@ -12,9 +12,7 @@ final class ProductRepository
     {
     }
 
-    /**
-     * @return array<int, array<string, mixed>>
-     */
+    /** @return array<int, array<string, mixed>> */
     public function all(string $lang = 'en', ?string $type = null): array
     {
         $safeLang = $this->sanitizeLang($lang);
@@ -60,9 +58,7 @@ final class ProductRepository
         }, $rows);
     }
 
-    /**
-     * @return array<int, array<string, mixed>>
-     */
+    /** @return array<int, array<string, mixed>> */
     public function allForIndexing(): array
     {
         $stmt = $this->pdo->query(
@@ -89,9 +85,7 @@ final class ProductRepository
         }, $rows);
     }
 
-    /**
-     * @return array<int, array<string, mixed>>
-     */
+    /** @return array<int, array<string, mixed>> */
     public function metadataFields(?string $type = null, string $lang = 'en'): array
     {
         $safeLang = $this->sanitizeLang($lang);
@@ -138,9 +132,7 @@ final class ProductRepository
         }, $rows);
     }
 
-    /**
-     * @return array<int, array<string, mixed>>
-     */
+    /** @return array<int, array<string, mixed>> */
     public function metadataFilters(?string $type = null, string $lang = 'en'): array
     {
         $fields = $this->metadataFields($type, $lang);
@@ -167,11 +159,7 @@ final class ProductRepository
             }
 
             foreach ($metadata as $key => $value) {
-                if (!isset($filters[$key])) {
-                    continue;
-                }
-
-                if (!is_scalar($value)) {
+                if (!isset($filters[$key]) || !is_scalar($value)) {
                     continue;
                 }
 
@@ -180,11 +168,7 @@ final class ProductRepository
                     continue;
                 }
 
-                if (!isset($filters[$key]['options_map'][$normalized])) {
-                    $filters[$key]['options_map'][$normalized] = 0;
-                }
-
-                $filters[$key]['options_map'][$normalized]++;
+                $filters[$key]['options_map'][$normalized] = ($filters[$key]['options_map'][$normalized] ?? 0) + 1;
             }
         }
 
@@ -192,24 +176,17 @@ final class ProductRepository
         foreach ($filters as $filter) {
             $options = [];
             foreach ($filter['options_map'] as $value => $count) {
-                $options[] = [
-                    'value' => $value,
-                    'count' => $count,
-                ];
+                $options[] = ['value' => $value, 'count' => $count];
             }
 
-            usort($options, static function (array $a, array $b): int {
-                return strcmp((string) $a['value'], (string) $b['value']);
-            });
+            usort($options, static fn(array $a, array $b): int => strcmp((string) $a['value'], (string) $b['value']));
 
             unset($filter['options_map']);
             $filter['options'] = $options;
             $result[] = $filter;
         }
 
-        usort($result, static function (array $a, array $b): int {
-            return ((int) $a['sort_order']) <=> ((int) $b['sort_order']);
-        });
+        usort($result, static fn(array $a, array $b): int => ((int) $a['sort_order']) <=> ((int) $b['sort_order']));
 
         return $result;
     }
@@ -217,28 +194,17 @@ final class ProductRepository
     private function sanitizeLang(string $lang): string
     {
         $lang = strtolower(trim($lang));
-
-        if (preg_match('/^[a-z]{2}$/', $lang) !== 1) {
-            return 'en';
-        }
-
-        return $lang;
+        return preg_match('/^[a-z]{2}$/', $lang) === 1 ? $lang : 'en';
     }
 
-    /**
-     * @return array<string, mixed>
-     */
+    /** @return array<string, mixed> */
     private function decodeJson(string $json): array
     {
         $decoded = json_decode($json, true);
         return is_array($decoded) ? $decoded : [];
     }
 
-    /**
-     * @param array<string, mixed> $name
-     * @param array<string, mixed> $description
-     * @param array<string, mixed> $metadata
-     */
+    /** @param array<string, mixed> $name @param array<string, mixed> $description @param array<string, mixed> $metadata */
     private function buildSearchableText(array $name, array $description, array $metadata): string
     {
         $parts = [];
@@ -246,30 +212,21 @@ final class ProductRepository
         return implode(' ', $parts);
     }
 
-    /**
-     * @param array<string, mixed> $metadata
-     * @return array<string, mixed>
-     */
+    /** @param array<string, mixed> $metadata @return array<string, mixed> */
     private function localizeMetadata(array $metadata, string $lang): array
     {
         $localized = [];
 
         foreach ($metadata as $key => $value) {
-            if (is_array($value)) {
-                $localized[$key] = $this->extractLocalizedValue($value, $lang);
-                continue;
-            }
-
-            $localized[$key] = $value;
+            $localized[$key] = is_array($value)
+                ? $this->extractLocalizedValue($value, $lang)
+                : $value;
         }
 
         return $localized;
     }
 
-    /**
-     * @param array<string, mixed> $value
-     * @return mixed
-     */
+    /** @param array<string, mixed> $value */
     private function extractLocalizedValue(array $value, string $lang): mixed
     {
         if (array_key_exists($lang, $value) && !is_array($value[$lang])) {
@@ -289,10 +246,7 @@ final class ProductRepository
         return $value;
     }
 
-    /**
-     * @param mixed $value
-     * @param array<int, string> $parts
-     */
+    /** @param mixed $value @param array<int, string> $parts */
     private function collectScalars(mixed $value, array &$parts): void
     {
         if (is_scalar($value)) {

@@ -2,43 +2,43 @@
 @baseUrl = http://localhost:8080
 
 ### Health
-GET {{baseUrl}}/health
+GET {{baseUrl}}/api/health
 
 ### Products - all (EN)
-GET {{baseUrl}}/products?lang=en
+GET {{baseUrl}}/api/products?lang=en
 
 ### Products - by type (IT)
-GET {{baseUrl}}/products?lang=it&type=footwear
+GET {{baseUrl}}/api/products?lang=it&type=footwear
 
 ### Metadata fields - all types (EN)
-GET {{baseUrl}}/metadata-fields?lang=en
+GET {{baseUrl}}/api/metadata-fields?lang=en
 
 ### Metadata fields - by type (IT)
-GET {{baseUrl}}/metadata-fields?lang=it&type=electronics
+GET {{baseUrl}}/api/metadata-fields?lang=it&type=electronics
 
 ### Filters - by type (IT)
-GET {{baseUrl}}/filters?lang=it&type=footwear
+GET {{baseUrl}}/api/filters?lang=it&type=footwear
 
 ### Filters - by type (EN)
-GET {{baseUrl}}/filters?lang=en&type=electronics
+GET {{baseUrl}}/api/filters?lang=en&type=electronics
 
 ### Reindex products to Meilisearch
-POST {{baseUrl}}/reindex
+POST {{baseUrl}}/api/reindex
 Content-Type: application/json
 
 {}
 
 ### Search - generic
-GET {{baseUrl}}/search?q=laptop
+GET {{baseUrl}}/api/search?q=laptop
 
 ### Search - synonym (IT)
-GET {{baseUrl}}/search?q=portatile
+GET {{baseUrl}}/api/search?q=portatile
 
 ### Search - synonym (EN)
-GET {{baseUrl}}/search?q=notebook
+GET {{baseUrl}}/api/search?q=notebook
 
 ### Search - by type
-GET {{baseUrl}}/search?q=allacciatura&type=footwear
+GET {{baseUrl}}/api/search?q=allacciatura&type=footwear
 
 ### Search - metadata IT term
-GET {{baseUrl}}/search?q=lampo
+GET {{baseUrl}}/api/search?q=lampo

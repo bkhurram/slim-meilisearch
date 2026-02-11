@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App;
+namespace App\Service;
 
 use Meilisearch\Client;
 
@@ -10,13 +10,15 @@ final class SearchService
 {
     private Client $client;
 
-    public function __construct()
+    /** @param array<string, mixed> $meiliConfig */
+    public function __construct(array $meiliConfig)
     {
-        $host = Config::get('MEILI_HOST', 'http://meilisearch:7700');
-        $masterKey = Config::get('MEILI_MASTER_KEY', 'masterKey123');
+        $host = (string) ($meiliConfig['host'] ?? 'http://meilisearch:7700');
+        $masterKey = (string) ($meiliConfig['master_key'] ?? 'masterKey123');
         $this->client = new Client($host, $masterKey);
     }
 
+    /** @param array<int, array<string, mixed>> $products */
     public function reindexProducts(array $products): array
     {
         $index = $this->client->index('products');

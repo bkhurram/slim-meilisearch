@@ -5,6 +5,7 @@ Example project with:
 - MySQL `products` table (multilanguage + dynamic metadata)
 - Meilisearch integration
 - Docker Compose setup
+- Structured bootstrap/config + handlers/services/repositories
 
 ## Run
 
@@ -15,6 +16,37 @@ docker compose up --build
 ```
 
 App runs on `http://localhost:8080`.
+
+## Project Structure
+
+```text
+config/
+  bootstrap.php
+  commands.php
+  dependencies.php
+  config.php
+  routes.php
+
+src/
+  Domain/
+  Handler/
+  Service/
+  Repository/
+```
+
+## Libraries
+
+- `symfony/console`
+- `symfony/dotenv`
+- `nyholm/psr7`
+- `nyholm/psr7-server`
+- `monolog/monolog`
+
+## CLI
+
+```bash
+docker compose exec -T app php bin/console app:reindex
+```
 
 ## Product Data Model
 
