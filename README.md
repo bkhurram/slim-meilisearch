@@ -59,7 +59,13 @@ curl "http://localhost:8080/metadata-fields?lang=it&type=footwear"
 curl "http://localhost:8080/metadata-fields?lang=en"
 ```
 
-5. Search in Meilisearch (optional type filter)
+5. Build filters from metadata fields + product values
+```bash
+curl "http://localhost:8080/filters?lang=it&type=footwear"
+curl "http://localhost:8080/filters?lang=en&type=electronics"
+```
+
+6. Search in Meilisearch (optional type filter)
 ```bash
 curl "http://localhost:8080/search?q=laptop"
 curl "http://localhost:8080/search?q=cotone&type=apparel"

@@ -52,6 +52,22 @@ $app->get('/metadata-fields', function (Request $request, Response $response): R
     return $response->withHeader('Content-Type', 'application/json');
 });
 
+$app->get('/filters', function (Request $request, Response $response): Response {
+    $query = $request->getQueryParams();
+    $lang = (string) ($query['lang'] ?? 'en');
+    $type = isset($query['type']) ? trim((string) $query['type']) : null;
+
+    $filters = (new ProductRepository(Database::connect()))->metadataFilters($type, $lang);
+
+    $response->getBody()->write(json_encode([
+        'lang' => $lang,
+        'type' => $type,
+        'data' => $filters,
+    ], JSON_THROW_ON_ERROR));
+
+    return $response->withHeader('Content-Type', 'application/json');
+});
+
 $app->post('/reindex', function (Request $request, Response $response): Response {
     $repository = new ProductRepository(Database::connect());
     $products = $repository->allForIndexing();

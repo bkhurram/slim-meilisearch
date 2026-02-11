@@ -138,6 +138,82 @@ final class ProductRepository
         }, $rows);
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function metadataFilters(?string $type = null, string $lang = 'en'): array
+    {
+        $fields = $this->metadataFields($type, $lang);
+        $products = $this->all($lang, $type);
+
+        $filters = [];
+        foreach ($fields as $field) {
+            $filters[$field['field_key']] = [
+                'product_type' => $field['product_type'],
+                'field_key' => $field['field_key'],
+                'label' => $field['label'],
+                'label_translations' => $field['label_translations'],
+                'value_type' => $field['value_type'],
+                'is_required' => $field['is_required'],
+                'sort_order' => $field['sort_order'],
+                'options_map' => [],
+            ];
+        }
+
+        foreach ($products as $product) {
+            $metadata = $product['metadata'] ?? [];
+            if (!is_array($metadata)) {
+                continue;
+            }
+
+            foreach ($metadata as $key => $value) {
+                if (!isset($filters[$key])) {
+                    continue;
+                }
+
+                if (!is_scalar($value)) {
+                    continue;
+                }
+
+                $normalized = trim((string) $value);
+                if ($normalized === '') {
+                    continue;
+                }
+
+                if (!isset($filters[$key]['options_map'][$normalized])) {
+                    $filters[$key]['options_map'][$normalized] = 0;
+                }
+
+                $filters[$key]['options_map'][$normalized]++;
+            }
+        }
+
+        $result = [];
+        foreach ($filters as $filter) {
+            $options = [];
+            foreach ($filter['options_map'] as $value => $count) {
+                $options[] = [
+                    'value' => $value,
+                    'count' => $count,
+                ];
+            }
+
+            usort($options, static function (array $a, array $b): int {
+                return strcmp((string) $a['value'], (string) $b['value']);
+            });
+
+            unset($filter['options_map']);
+            $filter['options'] = $options;
+            $result[] = $filter;
+        }
+
+        usort($result, static function (array $a, array $b): int {
+            return ((int) $a['sort_order']) <=> ((int) $b['sort_order']);
+        });
+
+        return $result;
+    }
+
     private function sanitizeLang(string $lang): string
     {
         $lang = strtolower(trim($lang));
