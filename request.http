@@ -1,0 +1,32 @@
+### Base URL
+@baseUrl = http://localhost:8080
+
+### Health
+GET {{baseUrl}}/health
+
+### Products - all (EN)
+GET {{baseUrl}}/products?lang=en
+
+### Products - by type (IT)
+GET {{baseUrl}}/products?lang=it&type=footwear
+
+### Metadata fields - all types (EN)
+GET {{baseUrl}}/metadata-fields?lang=en
+
+### Metadata fields - by type (IT)
+GET {{baseUrl}}/metadata-fields?lang=it&type=electronics
+
+### Reindex products to Meilisearch
+POST {{baseUrl}}/reindex
+Content-Type: application/json
+
+{}
+
+### Search - generic
+GET {{baseUrl}}/search?q=laptop
+
+### Search - by type
+GET {{baseUrl}}/search?q=allacciatura&type=footwear
+
+### Search - metadata IT term
+GET {{baseUrl}}/search?q=rivestimento
