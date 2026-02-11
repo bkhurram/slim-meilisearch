@@ -31,6 +31,32 @@ final class SearchService
             'metadata',
             'searchable_text',
         ]);
+        $index->updateSynonyms([
+            'laptop' => ['portatile', 'notebook'],
+            'portatile' => ['laptop', 'notebook'],
+            'notebook' => ['laptop', 'portatile'],
+            'ceramica' => ['terracotta', 'porcellana'],
+            'terracotta' => ['ceramica', 'porcellana'],
+            'porcellana' => ['ceramica', 'terracotta'],
+            'idrorepellente' => ['impermeabile', 'resistente all acqua', 'water-resistant'],
+            'impermeabile' => ['idrorepellente', 'resistente all acqua', 'water-resistant'],
+            'resistente all acqua' => ['idrorepellente', 'impermeabile', 'water-resistant'],
+            'water-resistant' => ['idrorepellente', 'impermeabile', 'resistente all acqua'],
+            'stringhe' => ['lacci', 'stringacci', 'cordoncini'],
+            'lacci' => ['stringhe', 'stringacci', 'cordoncini'],
+            'stringacci' => ['stringhe', 'lacci', 'cordoncini'],
+            'cordoncini' => ['stringhe', 'lacci', 'stringacci'],
+            'ubuntu' => ['linux', 'open-source'],
+            'linux' => ['ubuntu', 'open-source'],
+            'open-source' => ['ubuntu', 'linux'],
+            'aderente' => ['slim', 'attillata', 'fitted'],
+            'slim' => ['aderente', 'attillata', 'fitted'],
+            'attillata' => ['aderente', 'slim', 'fitted'],
+            'fitted' => ['aderente', 'slim', 'attillata'],
+            'zip' => ['cerniera', 'lampo'],
+            'cerniera' => ['zip', 'lampo'],
+            'lampo' => ['zip', 'cerniera'],
+        ]);
 
         return $index->addDocuments($products, 'id');
     }

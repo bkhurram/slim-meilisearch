@@ -25,8 +25,14 @@ Content-Type: application/json
 ### Search - generic
 GET {{baseUrl}}/search?q=laptop
 
+### Search - synonym (IT)
+GET {{baseUrl}}/search?q=portatile
+
+### Search - synonym (EN)
+GET {{baseUrl}}/search?q=notebook
+
 ### Search - by type
 GET {{baseUrl}}/search?q=allacciatura&type=footwear
 
 ### Search - metadata IT term
-GET {{baseUrl}}/search?q=rivestimento
+GET {{baseUrl}}/search?q=lampo
