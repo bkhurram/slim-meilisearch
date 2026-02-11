@@ -1,0 +1,22 @@
+{
+  "name": "example/slim-meilisearch",
+  "description": "Slim + MySQL + Meilisearch example",
+  "type": "project",
+  "require": {
+    "php": "^8.2",
+    "slim/slim": "^4.13",
+    "slim/psr7": "^1.7",
+    "meilisearch/meilisearch-php": "^1.16",
+    "guzzlehttp/guzzle": "^7.9"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "php-http/discovery": true
+    }
+  }
+}

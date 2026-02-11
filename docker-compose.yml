@@ -1,0 +1,56 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: slim_app
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: slim_demo
+      DB_USERNAME: app
+      DB_PASSWORD: app_pass
+      MEILI_HOST: http://slim_meilisearch:7700
+      MEILI_MASTER_KEY: masterKey123
+    depends_on:
+      - db
+      - meilisearch
+    ports:
+      - "8080:8080"
+    command: >
+      sh -c "composer install --no-interaction --prefer-dist &&
+             php -S 0.0.0.0:8080 -t public"
+
+  db:
+    image: mysql:8.0
+    container_name: slim_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: slim_demo
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app_pass
+      MYSQL_ROOT_PASSWORD: root_pass
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.12
+    container_name: slim_meilisearch
+    restart: unless-stopped
+    environment:
+      MEILI_MASTER_KEY: masterKey123
+      MEILI_NO_ANALYTICS: "true"
+    ports:
+      - "7700:7700"
+    volumes:
+      - meili_data:/meili_data
+
+volumes:
+  db_data:
+  meili_data:
