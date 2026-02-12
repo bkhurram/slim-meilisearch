@@ -1,0 +1,237 @@
+<?php
+
+declare(strict_types=1);
+
+use Phinx\Seed\AbstractSeed;
+
+final class ProductsSeeder extends AbstractSeed
+{
+    public function run(): void
+    {
+        $this->execute('TRUNCATE TABLE products');
+
+        foreach ($this->records() as $record) {
+            $this->table('products')->insert($record)->saveData();
+        }
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function records(): array
+    {
+        return [
+            [
+                'sku'          => 'LAP-001',
+                'product_type' => 'electronics',
+                'name'         => json_encode(['en' => 'Gaming Laptop', 'it' => 'Laptop da Gaming'], JSON_THROW_ON_ERROR),
+                'description'  => json_encode(['en' => 'High-performance laptop for gaming and development', 'it' => 'Laptop ad alte prestazioni per gaming e sviluppo'], JSON_THROW_ON_ERROR),
+                'metadata'     => json_encode([
+                    'brand'       => ['en' => 'AstraTech', 'it' => 'AstraTech'],
+                    'made_in'     => ['en' => 'Taiwan', 'it' => 'Taiwan'],
+                    'color'       => ['en' => 'black', 'it' => 'nero'],
+                    'material'    => ['en' => 'aluminum', 'it' => 'alluminio'],
+                    'height'      => ['en' => '2.2 cm', 'it' => '2.2 cm'],
+                    'width'       => ['en' => '35.8 cm', 'it' => '35.8 cm'],
+                    'depth'       => ['en' => '24.5 cm', 'it' => '24.5 cm'],
+                    'weight'      => ['en' => '2.3kg', 'it' => '2.3kg'],
+                    'screen_size' => ['en' => '15.6 inch', 'it' => '15.6 pollici'],
+                    'os'          => ['en' => 'Windows 11 Pro', 'it' => 'Windows 11 Pro'],
+                    'cpu'         => ['en' => 'Intel Core i7', 'it' => 'Intel Core i7'],
+                    'ram'         => ['en' => '32GB', 'it' => '32GB'],
+                    'storage'     => ['en' => '1TB SSD', 'it' => '1TB SSD'],
+                    'coating'     => ['en' => 'anti-fingerprint', 'it' => 'anti impronta'],
+                ], JSON_THROW_ON_ERROR),
+                'price' => 1499.99,
+            ],
+            [
+                'sku'          => 'KEY-001',
+                'product_type' => 'accessory',
+                'name'         => json_encode(['en' => 'Mechanical Keyboard', 'it' => 'Tastiera Meccanica'], JSON_THROW_ON_ERROR),
+                'description'  => json_encode(['en' => 'RGB mechanical keyboard with blue switches', 'it' => 'Tastiera meccanica RGB con switch blu'], JSON_THROW_ON_ERROR),
+                'metadata'     => json_encode([
+                    'brand'        => ['en' => 'KeyForge', 'it' => 'KeyForge'],
+                    'made_in'      => ['en' => 'China', 'it' => 'Cina'],
+                    'color'        => ['en' => 'white', 'it' => 'bianco'],
+                    'material'     => ['en' => 'ABS plastic', 'it' => 'plastica ABS'],
+                    'height'       => ['en' => '3.8 cm', 'it' => '3.8 cm'],
+                    'width'        => ['en' => '35.0 cm', 'it' => '35.0 cm'],
+                    'depth'        => ['en' => '12.0 cm', 'it' => '12.0 cm'],
+                    'layout'       => ['en' => 'TKL', 'it' => 'TKL'],
+                    'switch_type'  => ['en' => 'blue switches', 'it' => 'switch blu'],
+                    'connectivity' => ['en' => 'USB-C wired', 'it' => 'cablata USB-C'],
+                    'weight'       => ['en' => '850g', 'it' => '850g'],
+                    'coating'      => ['en' => 'matte finish', 'it' => 'finitura opaca'],
+                ], JSON_THROW_ON_ERROR),
+                'price' => 119.90,
+            ],
+            [
+                'sku'          => 'TSH-001',
+                'product_type' => 'apparel',
+                'name'         => json_encode(['en' => 'Cotton T-Shirt', 'it' => 'Maglietta di Cotone'], JSON_THROW_ON_ERROR),
+                'description'  => json_encode(['en' => 'Soft cotton shirt for everyday use', 'it' => 'Maglietta morbida in cotone per uso quotidiano'], JSON_THROW_ON_ERROR),
+                'metadata'     => json_encode([
+                    'brand'        => ['en' => 'UrbanThread', 'it' => 'UrbanThread'],
+                    'made_in'      => ['en' => 'Italy', 'it' => 'Italia'],
+                    'color'        => ['en' => 'navy', 'it' => 'blu navy'],
+                    'material'     => ['en' => 'cotton', 'it' => 'cotone'],
+                    'size'         => ['en' => 'M', 'it' => 'M'],
+                    'fit'          => ['en' => 'regular', 'it' => 'regolare'],
+                    'height'       => ['en' => '72 cm', 'it' => '72 cm'],
+                    'width'        => ['en' => '52 cm', 'it' => '52 cm'],
+                    'depth'        => ['en' => '0.3 cm', 'it' => '0.3 cm'],
+                    'closure_type' => ['en' => 'pullover', 'it' => 'senza chiusura'],
+                    'strap_type'   => ['en' => 'none', 'it' => 'nessuna spallina'],
+                    'coating'      => ['en' => 'enzyme wash', 'it' => 'lavaggio enzimatico'],
+                ], JSON_THROW_ON_ERROR),
+                'price' => 24.90,
+            ],
+            [
+                'sku'          => 'MUG-001',
+                'product_type' => 'home',
+                'name'         => json_encode(['en' => 'Ceramic Mug', 'it' => 'Tazza in Ceramica'], JSON_THROW_ON_ERROR),
+                'description'  => json_encode(['en' => 'Dishwasher-safe ceramic coffee mug', 'it' => 'Tazza da caffe in ceramica lavabile in lavastoviglie'], JSON_THROW_ON_ERROR),
+                'metadata'     => json_encode([
+                    'brand'    => ['en' => 'CasaLine', 'it' => 'CasaLine'],
+                    'made_in'  => ['en' => 'Portugal', 'it' => 'Portogallo'],
+                    'color'    => ['en' => 'green', 'it' => 'verde'],
+                    'material' => ['en' => 'ceramic', 'it' => 'ceramica'],
+                    'height'   => ['en' => '9.8 cm', 'it' => '9.8 cm'],
+                    'width'    => ['en' => '12.1 cm', 'it' => '12.1 cm'],
+                    'depth'    => ['en' => '8.6 cm', 'it' => '8.6 cm'],
+                    'capacity' => ['en' => '350ml', 'it' => '350ml'],
+                    'weight'   => ['en' => '300g', 'it' => '300g'],
+                    'coating'  => ['en' => 'glazed', 'it' => 'smaltata'],
+                ], JSON_THROW_ON_ERROR),
+                'price' => 14.50,
+            ],
+            [
+                'sku'          => 'RUN-001',
+                'product_type' => 'footwear',
+                'name'         => json_encode(['en' => 'Running Shoes', 'it' => 'Scarpe da Corsa'], JSON_THROW_ON_ERROR),
+                'description'  => json_encode(['en' => 'Breathable shoes for daily training', 'it' => 'Scarpe traspiranti per allenamento quotidiano'], JSON_THROW_ON_ERROR),
+                'metadata'     => json_encode([
+                    'brand'        => ['en' => 'StrideLab', 'it' => 'StrideLab'],
+                    'made_in'      => ['en' => 'Vietnam', 'it' => 'Vietnam'],
+                    'color'        => ['en' => 'red', 'it' => 'rosso'],
+                    'material'     => ['en' => 'mesh', 'it' => 'rete'],
+                    'size'         => ['en' => '42', 'it' => '42'],
+                    'height'       => ['en' => '11.5 cm', 'it' => '11.5 cm'],
+                    'width'        => ['en' => '10.1 cm', 'it' => '10.1 cm'],
+                    'depth'        => ['en' => '29.0 cm', 'it' => '29.0 cm'],
+                    'weight'       => ['en' => '260g', 'it' => '260g'],
+                    'closure_type' => ['en' => 'lace-up', 'it' => 'stringhe'],
+                    'strap_type'   => ['en' => 'heel support', 'it' => 'supporto tallone'],
+                    'coating'      => ['en' => 'water-repellent', 'it' => 'idrorepellente'],
+                ], JSON_THROW_ON_ERROR),
+                'price' => 89.99,
+            ],
+            [
+                'sku'          => 'LAP-002',
+                'product_type' => 'electronics',
+                'name'         => json_encode(['en' => 'Ultrabook Pro', 'it' => 'Ultrabook Pro'], JSON_THROW_ON_ERROR),
+                'description'  => json_encode(['en' => 'Lightweight laptop for office and travel', 'it' => 'Laptop leggero per ufficio e viaggio'], JSON_THROW_ON_ERROR),
+                'metadata'     => json_encode([
+                    'brand'       => ['en' => 'NovaCompute', 'it' => 'NovaCompute'],
+                    'made_in'     => ['en' => 'South Korea', 'it' => 'Corea del Sud'],
+                    'color'       => ['en' => 'silver', 'it' => 'argento'],
+                    'material'    => ['en' => 'aluminum', 'it' => 'alluminio'],
+                    'height'      => ['en' => '1.6 cm', 'it' => '1.6 cm'],
+                    'width'       => ['en' => '31.4 cm', 'it' => '31.4 cm'],
+                    'depth'       => ['en' => '22.1 cm', 'it' => '22.1 cm'],
+                    'weight'      => ['en' => '1.2kg', 'it' => '1.2kg'],
+                    'screen_size' => ['en' => '14 inch', 'it' => '14 pollici'],
+                    'os'          => ['en' => 'Ubuntu 24.04 LTS', 'it' => 'Ubuntu 24.04 LTS'],
+                    'cpu'         => ['en' => 'AMD Ryzen 7', 'it' => 'AMD Ryzen 7'],
+                    'ram'         => ['en' => '16GB', 'it' => '16GB'],
+                    'storage'     => ['en' => '512GB SSD', 'it' => '512GB SSD'],
+                    'coating'     => ['en' => 'anti-glare', 'it' => 'antiriflesso'],
+                ], JSON_THROW_ON_ERROR),
+                'price' => 999.00,
+            ],
+            [
+                'sku'          => 'KEY-002',
+                'product_type' => 'accessory',
+                'name'         => json_encode(['en' => 'Wireless Mouse', 'it' => 'Mouse Wireless'], JSON_THROW_ON_ERROR),
+                'description'  => json_encode(['en' => 'Ergonomic mouse with silent click buttons', 'it' => 'Mouse ergonomico con tasti silenziosi'], JSON_THROW_ON_ERROR),
+                'metadata'     => json_encode([
+                    'brand'        => ['en' => 'ClickPoint', 'it' => 'ClickPoint'],
+                    'made_in'      => ['en' => 'Malaysia', 'it' => 'Malesia'],
+                    'color'        => ['en' => 'black', 'it' => 'nero'],
+                    'material'     => ['en' => 'polycarbonate', 'it' => 'policarbonato'],
+                    'height'       => ['en' => '4.1 cm', 'it' => '4.1 cm'],
+                    'width'        => ['en' => '6.6 cm', 'it' => '6.6 cm'],
+                    'depth'        => ['en' => '11.8 cm', 'it' => '11.8 cm'],
+                    'layout'       => ['en' => 'right-handed', 'it' => 'destro'],
+                    'connectivity' => ['en' => '2.4G wireless', 'it' => 'wireless 2.4G'],
+                    'dpi'          => ['en' => '1600', 'it' => '1600'],
+                    'weight'       => ['en' => '95g', 'it' => '95g'],
+                    'coating'      => ['en' => 'soft-touch', 'it' => 'soft touch'],
+                ], JSON_THROW_ON_ERROR),
+                'price' => 39.90,
+            ],
+            [
+                'sku'          => 'TSH-002',
+                'product_type' => 'apparel',
+                'name'         => json_encode(['en' => 'Performance Hoodie', 'it' => 'Felpa Tecnica'], JSON_THROW_ON_ERROR),
+                'description'  => json_encode(['en' => 'Warm hoodie for outdoor activities', 'it' => 'Felpa calda per attivita all aperto'], JSON_THROW_ON_ERROR),
+                'metadata'     => json_encode([
+                    'brand'        => ['en' => 'PeakWear', 'it' => 'PeakWear'],
+                    'made_in'      => ['en' => 'Turkey', 'it' => 'Turchia'],
+                    'color'        => ['en' => 'charcoal', 'it' => 'antracite'],
+                    'material'     => ['en' => 'polyester blend', 'it' => 'misto poliestere'],
+                    'size'         => ['en' => 'L', 'it' => 'L'],
+                    'fit'          => ['en' => 'slim', 'it' => 'aderente'],
+                    'height'       => ['en' => '74 cm', 'it' => '74 cm'],
+                    'width'        => ['en' => '56 cm', 'it' => '56 cm'],
+                    'depth'        => ['en' => '1.1 cm', 'it' => '1.1 cm'],
+                    'closure_type' => ['en' => 'zipper', 'it' => 'zip'],
+                    'strap_type'   => ['en' => 'none', 'it' => 'nessuna spallina'],
+                    'coating'      => ['en' => 'fleece lining', 'it' => 'interno felpato'],
+                ], JSON_THROW_ON_ERROR),
+                'price' => 59.00,
+            ],
+            [
+                'sku'          => 'MUG-002',
+                'product_type' => 'home',
+                'name'         => json_encode(['en' => 'Glass Water Bottle', 'it' => 'Bottiglia in Vetro'], JSON_THROW_ON_ERROR),
+                'description'  => json_encode(['en' => 'Reusable bottle with leak-proof cap', 'it' => 'Bottiglia riutilizzabile con tappo anti perdita'], JSON_THROW_ON_ERROR),
+                'metadata'     => json_encode([
+                    'brand'        => ['en' => 'EcoSip', 'it' => 'EcoSip'],
+                    'made_in'      => ['en' => 'Germany', 'it' => 'Germania'],
+                    'color'        => ['en' => 'transparent', 'it' => 'trasparente'],
+                    'material'     => ['en' => 'borosilicate glass', 'it' => 'vetro borosilicato'],
+                    'height'       => ['en' => '24.0 cm', 'it' => '24.0 cm'],
+                    'width'        => ['en' => '7.2 cm', 'it' => '7.2 cm'],
+                    'depth'        => ['en' => '7.2 cm', 'it' => '7.2 cm'],
+                    'capacity'     => ['en' => '500ml', 'it' => '500ml'],
+                    'weight'       => ['en' => '420g', 'it' => '420g'],
+                    'closure_type' => ['en' => 'screw cap', 'it' => 'tappo a vite'],
+                    'coating'      => ['en' => 'anti-slip sleeve', 'it' => 'rivestimento antiscivolo'],
+                ], JSON_THROW_ON_ERROR),
+                'price' => 22.00,
+            ],
+            [
+                'sku'          => 'RUN-002',
+                'product_type' => 'footwear',
+                'name'         => json_encode(['en' => 'Trail Running Shoes', 'it' => 'Scarpe Trail Running'], JSON_THROW_ON_ERROR),
+                'description'  => json_encode(['en' => 'Grip-focused shoes for rough terrain', 'it' => 'Scarpe con grip per terreni sconnessi'], JSON_THROW_ON_ERROR),
+                'metadata'     => json_encode([
+                    'brand'        => ['en' => 'TerraMove', 'it' => 'TerraMove'],
+                    'made_in'      => ['en' => 'Indonesia', 'it' => 'Indonesia'],
+                    'color'        => ['en' => 'blue', 'it' => 'blu'],
+                    'material'     => ['en' => 'synthetic mesh', 'it' => 'rete sintetica'],
+                    'size'         => ['en' => '43', 'it' => '43'],
+                    'height'       => ['en' => '12.0 cm', 'it' => '12.0 cm'],
+                    'width'        => ['en' => '10.4 cm', 'it' => '10.4 cm'],
+                    'depth'        => ['en' => '30.1 cm', 'it' => '30.1 cm'],
+                    'weight'       => ['en' => '280g', 'it' => '280g'],
+                    'closure_type' => ['en' => 'quick lace', 'it' => 'allacciatura rapida'],
+                    'strap_type'   => ['en' => 'ankle support', 'it' => 'supporto caviglia'],
+                    'coating'      => ['en' => 'mud guard', 'it' => 'protezione fango'],
+                ], JSON_THROW_ON_ERROR),
+                'price' => 129.90,
+            ],
+        ];
+    }
+}
