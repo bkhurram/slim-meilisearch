@@ -15,7 +15,8 @@ final class ProductsListHandler
     use JsonResponder;
 
     public function __construct(private readonly ProductService $productService)
-    { }
+    {
+    }
 
     public function __invoke(Request $request, Response $response): Response
     {

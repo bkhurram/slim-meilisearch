@@ -12,6 +12,7 @@ trait JsonResponder
     private function json(ResponseInterface $response, array $payload, int $status = 200): ResponseInterface
     {
         $response->getBody()->write(json_encode($payload, JSON_THROW_ON_ERROR));
+
         return $response->withStatus($status)
                 ->withHeader('Content-Type', 'application/json');
     }

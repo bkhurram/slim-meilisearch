@@ -17,7 +17,8 @@ final class ProductsReindexHandler
     public function __construct(
         private readonly ProductService $productService,
         private readonly SearchService $searchService
-    ) { }
+    ) {
+    }
 
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
@@ -25,8 +26,8 @@ final class ProductsReindexHandler
         $task = $this->searchService->reindexProducts($products);
 
         return $this->json($response, [
-            'message' => 'Reindex requested',
-            'products_count' => count($products),
+            'message'          => 'Reindex requested',
+            'products_count'   => count($products),
             'meilisearch_task' => $task,
         ]);
     }

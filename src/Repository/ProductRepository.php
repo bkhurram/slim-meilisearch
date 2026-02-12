@@ -73,13 +73,13 @@ final class ProductRepository
             $metadata = $this->decodeJson($row['metadata_json'] ?? '{}');
 
             return [
-                'id' => (int) $row['id'],
-                'sku' => $row['sku'],
-                'product_type' => $row['product_type'],
-                'price' => (float) $row['price'],
-                'name' => $name,
-                'description' => $description,
-                'metadata' => $metadata,
+                'id'              => (int) $row['id'],
+                'sku'             => $row['sku'],
+                'product_type'    => $row['product_type'],
+                'price'           => (float) $row['price'],
+                'name'            => $name,
+                'description'     => $description,
+                'metadata'        => $metadata,
                 'searchable_text' => $this->buildSearchableText($name, $description, $metadata),
             ];
         }, $rows);
@@ -121,12 +121,12 @@ final class ProductRepository
             $label = $this->extractLocalizedValue($labelTranslations, $safeLang);
 
             return [
-                'product_type' => $row['product_type'],
-                'field_key' => $row['field_key'],
-                'value_type' => $row['value_type'],
-                'is_required' => (bool) $row['is_required'],
-                'sort_order' => (int) $row['sort_order'],
-                'label' => $label,
+                'product_type'       => $row['product_type'],
+                'field_key'          => $row['field_key'],
+                'value_type'         => $row['value_type'],
+                'is_required'        => (bool) $row['is_required'],
+                'sort_order'         => (int) $row['sort_order'],
+                'label'              => $label,
                 'label_translations' => $labelTranslations,
             ];
         }, $rows);
@@ -141,14 +141,14 @@ final class ProductRepository
         $filters = [];
         foreach ($fields as $field) {
             $filters[$field['field_key']] = [
-                'product_type' => $field['product_type'],
-                'field_key' => $field['field_key'],
-                'label' => $field['label'],
+                'product_type'       => $field['product_type'],
+                'field_key'          => $field['field_key'],
+                'label'              => $field['label'],
                 'label_translations' => $field['label_translations'],
-                'value_type' => $field['value_type'],
-                'is_required' => $field['is_required'],
-                'sort_order' => $field['sort_order'],
-                'options_map' => [],
+                'value_type'         => $field['value_type'],
+                'is_required'        => $field['is_required'],
+                'sort_order'         => $field['sort_order'],
+                'options_map'        => [],
             ];
         }
 
@@ -179,14 +179,14 @@ final class ProductRepository
                 $options[] = ['value' => $value, 'count' => $count];
             }
 
-            usort($options, static fn(array $a, array $b): int => strcmp((string) $a['value'], (string) $b['value']));
+            usort($options, static fn (array $a, array $b): int => strcmp((string) $a['value'], (string) $b['value']));
 
             unset($filter['options_map']);
             $filter['options'] = $options;
             $result[] = $filter;
         }
 
-        usort($result, static fn(array $a, array $b): int => ((int) $a['sort_order']) <=> ((int) $b['sort_order']));
+        usort($result, static fn (array $a, array $b): int => ((int) $a['sort_order']) <=> ((int) $b['sort_order']));
 
         return $result;
     }
@@ -194,6 +194,7 @@ final class ProductRepository
     private function sanitizeLang(string $lang): string
     {
         $lang = strtolower(trim($lang));
+
         return preg_match('/^[a-z]{2}$/', $lang) === 1 ? $lang : 'en';
     }
 
@@ -201,6 +202,7 @@ final class ProductRepository
     private function decodeJson(string $json): array
     {
         $decoded = json_decode($json, true);
+
         return is_array($decoded) ? $decoded : [];
     }
 
@@ -209,6 +211,7 @@ final class ProductRepository
     {
         $parts = [];
         $this->collectScalars([$name, $description, $metadata], $parts);
+
         return implode(' ', $parts);
     }
 
@@ -251,6 +254,7 @@ final class ProductRepository
     {
         if (is_scalar($value)) {
             $parts[] = (string) $value;
+
             return;
         }
 

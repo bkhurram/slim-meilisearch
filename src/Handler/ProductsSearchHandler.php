@@ -15,7 +15,8 @@ final class ProductsSearchHandler
     use JsonResponder;
 
     public function __construct(private readonly SearchService $searchService)
-    { }
+    {
+    }
 
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {

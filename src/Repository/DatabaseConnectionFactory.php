@@ -29,7 +29,7 @@ final readonly class DatabaseConnectionFactory
         for ($attempt = 1; $attempt <= $maxAttempts; $attempt++) {
             try {
                 return new PDO($dsn, $username, $password, [
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 ]);
             } catch (PDOException $exception) {
