@@ -2,7 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Command\ReindexCommand;
+use App\Command\ProductReindexCommand;
+use App\Core\LocalizationMiddleware;
 use App\Repository\DatabaseConnectionFactory;
 use App\Service\ProductService;
 use App\Service\SearchService;
@@ -45,8 +46,14 @@ return static function (Container $container): void {
     $container->set(ProductService::class, static fn (ContainerInterface $c) => new ProductService($c->get(DatabaseConnectionFactory::class)));
     $container->set(SearchService::class, static fn (ContainerInterface $c) => new SearchService((array) $c->get('meili')));
 
-    $container->set(ReindexCommand::class, static fn (ContainerInterface $c) => new ReindexCommand(
+    // Commands
+    $container->set(ProductReindexCommand::class, static fn (ContainerInterface $c) => new ProductReindexCommand(
         $c->get(ProductService::class),
         $c->get(SearchService::class)
+    ));
+
+    // Middleware
+    $container->set(LocalizationMiddleware::class, fn (ContainerInterface $c) => new LocalizationMiddleware(
+        languages: ['en', 'it'],
     ));
 };

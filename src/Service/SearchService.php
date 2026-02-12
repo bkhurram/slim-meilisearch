@@ -63,6 +63,11 @@ final class SearchService
         return $index->addDocuments($products, 'id');
     }
 
+    public function pendingIndex(): array
+    {
+        return $this->client->tasks->get('products');
+    }
+
     public function searchProducts(string $query, ?string $type = null): array
     {
         $index = $this->client->index('products');

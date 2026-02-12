@@ -10,13 +10,13 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class ReindexCommand extends Command
+final class ProductReindexCommand extends Command
 {
     public function __construct(
         private readonly ProductService $productService,
         private readonly SearchService $searchService
     ) {
-        parent::__construct('app:reindex');
+        parent::__construct('app:product-reindex');
         $this->setDescription('Reindex products into Meilisearch');
     }
 

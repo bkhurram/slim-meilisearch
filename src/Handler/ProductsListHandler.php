@@ -21,11 +21,10 @@ final class ProductsListHandler
     public function __invoke(Request $request, Response $response): Response
     {
         $query = $request->getQueryParams();
-        $lang = (string) ($query['lang'] ?? 'en');
+        $lang = $request->getAttribute('locale');
         $type = ProductType::normalize(isset($query['type']) ? (string) $query['type'] : null);
 
         return $this->json($response, [
-            'lang' => $lang,
             'type' => $type,
             'data' => $this->productService->listProducts($lang, $type),
         ]);

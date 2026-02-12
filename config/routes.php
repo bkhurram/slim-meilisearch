@@ -30,8 +30,8 @@ return static function (Container $container): void {
         $group->get('/health', HealthHandler::class);
         $group->get('/products', ProductsListHandler::class);
         $group->get('/metadata-fields', MetadataFieldsHandler::class);
-        $group->get('/filters', ProductsFiltersHandler::class);
+        $group->get('/products-filters', ProductsFiltersHandler::class);
         $group->post('/reindex', ProductsReindexHandler::class);
-        $group->get('/search', ProductsSearchHandler::class);
+        $group->get('/products-search', ProductsSearchHandler::class);
     });
 };

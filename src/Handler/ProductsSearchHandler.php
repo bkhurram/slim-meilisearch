@@ -28,8 +28,6 @@ final class ProductsSearchHandler
         }
 
         $result = $this->searchService->searchProducts($query, $type);
-        $response->getBody()->write(json_encode($result, JSON_THROW_ON_ERROR));
-
-        return $response->withHeader('Content-Type', 'application/json');
+        return $this->json($response, $result);
     }
 }

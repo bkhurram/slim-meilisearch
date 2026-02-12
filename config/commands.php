@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Command\ReindexCommand;
+use App\Command\ProductReindexCommand;
 use DI\Container;
 use Symfony\Component\Console\Application;
 
@@ -10,5 +10,5 @@ use Symfony\Component\Console\Application;
 return static function (Container $container): void {
     /** @var Application $app */
     $app = $container->get(Application::class);
-    $app->addCommand($container->get(ReindexCommand::class));
+    $app->addCommand($container->get(ProductReindexCommand::class));
 };

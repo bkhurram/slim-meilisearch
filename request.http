@@ -5,22 +5,28 @@
 GET {{baseUrl}}/api/health
 
 ### Products - all (EN)
-GET {{baseUrl}}/api/products?lang=en
+GET {{baseUrl}}/api/products
+Accept-Language: en
 
 ### Products - by type (IT)
-GET {{baseUrl}}/api/products?lang=it&type=footwear
+GET {{baseUrl}}/api/products?type=footwear
+Accept-Language: it
 
 ### Metadata fields - all types (EN)
-GET {{baseUrl}}/api/metadata-fields?lang=en
+GET {{baseUrl}}/api/metadata-fields
+Accept-Language: en
 
 ### Metadata fields - by type (IT)
-GET {{baseUrl}}/api/metadata-fields?lang=it&type=electronics
+GET {{baseUrl}}/api/metadata-fields?type=electronics
+Accept-Language: it
 
 ### Filters - by type (IT)
-GET {{baseUrl}}/api/filters?lang=it&type=footwear
+GET {{baseUrl}}/api/products-filters?type=footwear
+Accept-Language: it
 
 ### Filters - by type (EN)
-GET {{baseUrl}}/api/filters?lang=en&type=electronics
+GET {{baseUrl}}/api/products-filters?langtype=electronics
+Accept-Language: en
 
 ### Reindex products to Meilisearch
 POST {{baseUrl}}/api/reindex
@@ -29,16 +35,16 @@ Content-Type: application/json
 {}
 
 ### Search - generic
-GET {{baseUrl}}/api/search?q=laptop
+GET {{baseUrl}}/api/products-search?q=laptop
 
 ### Search - synonym (IT)
-GET {{baseUrl}}/api/search?q=portatile
+GET {{baseUrl}}/api/products-search?q=portatile
 
 ### Search - synonym (EN)
-GET {{baseUrl}}/api/search?q=notebook
+GET {{baseUrl}}/api/products-search?q=notebook
 
 ### Search - by type
-GET {{baseUrl}}/api/search?q=allacciatura&type=footwear
+GET {{baseUrl}}/api/products-search?q=allacciatura&type=footwear
 
 ### Search - metadata IT term
-GET {{baseUrl}}/api/search?q=lampo
+GET {{baseUrl}}/api/products-search?q=lampo

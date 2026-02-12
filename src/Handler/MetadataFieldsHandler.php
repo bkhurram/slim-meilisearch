@@ -7,8 +7,8 @@ namespace App\Handler;
 use App\Domain\ProductType;
 use App\Handler\Contracts\JsonResponder;
 use App\Service\ProductService;
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 final class MetadataFieldsHandler
 {
@@ -18,14 +18,16 @@ final class MetadataFieldsHandler
     {
     }
 
-    public function __invoke(Request $request, Response $response): Response
+    /**
+     * @throws \JsonException
+     */
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $query = $request->getQueryParams();
-        $lang = (string) ($query['lang'] ?? 'en');
+        $lang = $request->getAttribute('locale');
         $type = ProductType::normalize(isset($query['type']) ? (string) $query['type'] : null);
 
         return $this->json($response, [
-            'lang' => $lang,
             'type' => $type,
             'data' => $this->productService->listMetadataFields($lang, $type),
         ]);

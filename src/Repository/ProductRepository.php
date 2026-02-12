@@ -6,9 +6,9 @@ namespace App\Repository;
 
 use PDO;
 
-final class ProductRepository
+final readonly class ProductRepository
 {
-    public function __construct(private readonly PDO $pdo)
+    public function __construct(private PDO $pdo)
     {
     }
 
@@ -25,9 +25,7 @@ final class ProductRepository
                 price,
                 JSON_UNQUOTE(COALESCE(JSON_EXTRACT(name, '$.$safeLang'), JSON_EXTRACT(name, '$.en'))) AS name,
                 JSON_UNQUOTE(COALESCE(JSON_EXTRACT(description, '$.$safeLang'), JSON_EXTRACT(description, '$.en'))) AS description,
-                CAST(metadata AS CHAR) AS metadata_json,
-                CAST(name AS CHAR) AS name_translations_json,
-                CAST(description AS CHAR) AS description_translations_json
+                CAST(metadata AS CHAR) AS metadata_json
             FROM products
         ";
 
@@ -49,10 +47,7 @@ final class ProductRepository
         return array_map(function (array $row) use ($safeLang): array {
             $metadataTranslations = $this->decodeJson($row['metadata_json'] ?? '{}');
             $row['metadata'] = $this->localizeMetadata($metadataTranslations, $safeLang);
-            $row['metadata_translations'] = $metadataTranslations;
-            $row['name_translations'] = $this->decodeJson($row['name_translations_json'] ?? '{}');
-            $row['description_translations'] = $this->decodeJson($row['description_translations_json'] ?? '{}');
-            unset($row['metadata_json'], $row['name_translations_json'], $row['description_translations_json']);
+            unset($row['metadata_json']);
 
             return $row;
         }, $rows);
@@ -61,9 +56,18 @@ final class ProductRepository
     /** @return array<int, array<string, mixed>> */
     public function allForIndexing(): array
     {
-        $stmt = $this->pdo->query(
-            'SELECT id, sku, product_type, price, CAST(name AS CHAR) AS name_json, CAST(description AS CHAR) AS description_json, CAST(metadata AS CHAR) AS metadata_json FROM products ORDER BY id ASC'
-        );
+        $stmt = $this->pdo->query("
+            SELECT 
+                id, 
+                sku, 
+                product_type, 
+                price, 
+                CAST(name AS CHAR) AS name_json, 
+                CAST(description AS CHAR) AS description_json, 
+                CAST(metadata AS CHAR) AS metadata_json 
+            FROM products 
+            ORDER BY id ASC
+        ");
 
         $rows = $stmt->fetchAll();
 
