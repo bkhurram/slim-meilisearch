@@ -2,6 +2,16 @@
   "name": "example/slim-meilisearch",
   "description": "Slim + MySQL + Meilisearch example",
   "type": "project",
+  "scripts": {
+    "lint": "vendor/bin/php-cs-fixer fix",
+    "phpstan": "vendor/bin/phpstan analyse --memory-limit 4048M src/",
+    "phpunit": "phpunit --colors=always --testdox --fail-on-skipped",
+    "test": [
+      "@lint",
+      "@phpstan",
+      "@phpunit"
+    ]
+  },
   "require": {
     "ext-pdo": "*",
     "php": "^8.2",
@@ -16,6 +26,14 @@
     "php-di/php-di": "^7.1",
     "robmorgan/phinx": "^0.16.10"
   },
+  "require-dev": {
+    "jangregor/phpstan-prophecy": "^1.0",
+    "phpspec/prophecy-phpunit": "^2.3",
+    "phpstan/extension-installer": "^1.2.0",
+    "phpstan/phpstan": "^1.12",
+    "phpunit/phpunit": "^9.0",
+    "friendsofphp/php-cs-fixer": "^3.94"
+  },
   "autoload": {
     "psr-4": {
       "App\\": "src/"
@@ -23,7 +41,8 @@
   },
   "config": {
     "allow-plugins": {
-      "php-http/discovery": true
+      "php-http/discovery": true,
+      "phpstan/extension-installer": true
     }
   }
 }

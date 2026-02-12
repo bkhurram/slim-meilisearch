@@ -107,3 +107,26 @@ curl "http://localhost:8080/search?q=cotone&type=apparel"
 
 - Seed SQL is in `docker/mysql/init.sql`.
 - Reindex once after startup (`POST /reindex`) before calling search.
+
+## Database Migrations & Seeds (Phinx)
+
+Phinx is configured with:
+- `phinx.php`
+- `db/migrations`
+- `db/seeds`
+
+Commands:
+```bash
+make phinx-version
+make phinx-status
+make phinx-rollback
+make phinx-migrate
+make phinx-seed
+```
+
+Direct usage:
+```bash
+docker compose exec -T app ./vendor/bin/phinx status -c phinx.php
+docker compose exec -T app ./vendor/bin/phinx migrate -c phinx.php
+docker compose exec -T app ./vendor/bin/phinx seed:run -c phinx.php
+```
