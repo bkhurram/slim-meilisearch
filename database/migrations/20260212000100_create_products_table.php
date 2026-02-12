@@ -21,7 +21,7 @@ final class CreateProductsTable extends AbstractMigration
             ->addColumn('price', 'decimal', ['precision' => 10, 'scale' => 2])
             ->addColumn('created_at', 'timestamp', [
                 'default' => 'CURRENT_TIMESTAMP',
-                'null' => false,
+                'null'    => false,
             ])
             ->addIndex(['sku'], ['unique' => true])
             ->create();

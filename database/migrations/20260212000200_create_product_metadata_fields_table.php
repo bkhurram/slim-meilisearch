@@ -22,7 +22,7 @@ final class CreateProductMetadataFieldsTable extends AbstractMigration
             ->addColumn('sort_order', 'integer', ['default' => 0, 'limit' => MysqlAdapter::INT_REGULAR])
             ->addColumn('created_at', 'timestamp', [
                 'default' => 'CURRENT_TIMESTAMP',
-                'null' => false,
+                'null'    => false,
             ])
             ->addIndex(['product_type', 'field_key'], ['unique' => true, 'name' => 'ux_type_field'])
             ->create();
