@@ -84,7 +84,7 @@ final readonly class ProductRepository
                 'name'            => $name,
                 'description'     => $description,
                 'metadata'        => $metadata,
-                'searchable_text' => $this->buildSearchableText($name, $description, $metadata),
+                // 'searchable_text' => $this->buildSearchableText($name, $description, $metadata),
             ];
         }, $rows);
     }

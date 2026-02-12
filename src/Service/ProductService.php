@@ -9,7 +9,7 @@ use App\Repository\ProductRepository;
 
 final class ProductService
 {
-    public function __construct(private readonly DatabaseConnectionFactory $connectionFactory)
+    public function __construct(private readonly DatabaseConnectionFactory $connection)
     {
     }
 
@@ -39,6 +39,6 @@ final class ProductService
 
     private function repository(): ProductRepository
     {
-        return new ProductRepository($this->connectionFactory->create());
+        return new ProductRepository($this->connection->create());
     }
 }
