@@ -2,8 +2,9 @@
 
 Example project with:
 - PHP Slim Framework API
-- MySQL `products` table (multilanguage + dynamic metadata)
-- Meilisearch integration
+- MySQL `products` table (multilingual + dynamic metadata)
+- Dedicated metadata fields mapping table by product type
+- Meilisearch integration with custom synonyms
 - Docker Compose setup
 - Structured bootstrap/config + handlers/services/repositories
 
@@ -11,7 +12,6 @@ Example project with:
 
 ```bash
 docker compose down -v
-
 docker compose up --build
 ```
 
@@ -26,12 +26,18 @@ config/
   dependencies.php
   config.php
   routes.php
+  middleware.php
 
 src/
   Domain/
   Handler/
   Service/
   Repository/
+  Command/
+
+database/
+  migrations/
+  seeds/
 ```
 
 ## Libraries
@@ -41,11 +47,53 @@ src/
 - `nyholm/psr7`
 - `nyholm/psr7-server`
 - `monolog/monolog`
+- `robmorgan/phinx`
 
-## CLI
+## API Endpoints
+
+All endpoints are under `/api`.
+
+1. Health check
+```bash
+curl http://localhost:8080/api/health
+```
+
+2. Read products (language + type filter)
+```bash
+curl "http://localhost:8080/api/products?lang=it"
+curl "http://localhost:8080/api/products?lang=en&type=apparel"
+```
+
+3. Reindex MySQL products to Meilisearch
+```bash
+curl -X POST http://localhost:8080/api/reindex
+```
+
+4. Read metadata fields by product type
+```bash
+curl "http://localhost:8080/api/metadata-fields?lang=it&type=footwear"
+curl "http://localhost:8080/api/metadata-fields?lang=en"
+```
+
+5. Build dynamic filters from metadata fields + product values
+```bash
+curl "http://localhost:8080/api/products-filters?lang=it&type=footwear"
+curl "http://localhost:8080/api/products-filters?lang=en&type=electronics"
+```
+
+6. Search in Meilisearch (optional type filter)
+```bash
+curl "http://localhost:8080/api/products-search?q=laptop"
+curl "http://localhost:8080/api/products-search?q=cotone&type=apparel"
+```
+
+## CLI Commands
+
+Use the project console entrypoint:
 
 ```bash
-docker compose exec -T app php bin/console app:reindex
+docker compose exec -T app php console app:product-reindex
+docker compose exec -T app php console app:meilisearch-task --uid=1
 ```
 
 ## Product Data Model
@@ -55,73 +103,34 @@ docker compose exec -T app php bin/console app:reindex
 - `product_type`
 - `name` (JSON translations, e.g. `en`, `it`)
 - `description` (JSON translations)
-- `metadata` (JSON, dynamic + multilingual by product type: `color.en/color.it`, `material.en/material.it`, `size.en/size.it`, `weight.en/weight.it`, etc.)
+- `metadata` (JSON, dynamic + multilingual by product type)
 - `price`
 
-Dedicated metadata mapping table:
-- `product_metadata_fields`
+`product_metadata_fields`:
 - associates metadata keys to each `product_type`
-- includes multilingual labels, value type, required flag, and order
-
-## API Endpoints
-
-1. Health check
-```bash
-curl http://localhost:8080/health
-```
-
-2. Read products (language + type filter)
-```bash
-curl "http://localhost:8080/products?lang=it"
-curl "http://localhost:8080/products?lang=en&type=apparel"
-```
-
-Response includes:
-- `metadata`: localized values for selected `lang` (fallback to `en`)
-- `metadata_translations`: full multilingual metadata object
-
-3. Reindex MySQL products to Meilisearch
-```bash
-curl -X POST http://localhost:8080/reindex
-```
-
-4. Read metadata fields by product type
-```bash
-curl "http://localhost:8080/metadata-fields?lang=it&type=footwear"
-curl "http://localhost:8080/metadata-fields?lang=en"
-```
-
-5. Build filters from metadata fields + product values
-```bash
-curl "http://localhost:8080/filters?lang=it&type=footwear"
-curl "http://localhost:8080/filters?lang=en&type=electronics"
-```
-
-6. Search in Meilisearch (optional type filter)
-```bash
-curl "http://localhost:8080/search?q=laptop"
-curl "http://localhost:8080/search?q=cotone&type=apparel"
-```
-
-## Notes
-
-- Seed SQL is in `docker/mysql/init.sql`.
-- Reindex once after startup (`POST /reindex`) before calling search.
+- includes multilingual labels (`label` JSON), value type, required flag and sort order
 
 ## Database Migrations & Seeds (Phinx)
 
-Phinx is configured with:
+Phinx configuration:
 - `phinx.php`
-- `db/migrations`
-- `db/seeds`
+- `database/migrations`
+- `database/seeds`
 
-Commands:
+Migrations are split by table:
+- `20260212000100_create_products_table.php`
+- `20260212000200_create_product_metadata_fields_table.php`
+
+Rollback behavior:
+- each migration defines explicit `down()` and drops its table on rollback
+
+Make targets:
 ```bash
 make phinx-version
 make phinx-status
-make phinx-rollback
 make phinx-migrate
 make phinx-seed
+make phinx-rollback
 ```
 
 Direct usage:
@@ -129,4 +138,10 @@ Direct usage:
 docker compose exec -T app ./vendor/bin/phinx status -c phinx.php
 docker compose exec -T app ./vendor/bin/phinx migrate -c phinx.php
 docker compose exec -T app ./vendor/bin/phinx seed:run -c phinx.php
+docker compose exec -T app ./vendor/bin/phinx rollback -t 0 -c phinx.php
 ```
+
+## HTTP Requests File
+
+Ready-to-run examples are available in:
+- `request.http`

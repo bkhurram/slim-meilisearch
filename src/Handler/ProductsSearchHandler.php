@@ -20,14 +20,17 @@ final class ProductsSearchHandler
 
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
-        $query = trim((string) ($request->getQueryParams()['q'] ?? ''));
-        $type = ProductType::normalize(isset($request->getQueryParams()['type']) ? (string) $request->getQueryParams()['type'] : null);
+        $queryParams = $request->getQueryParams();
+        $query = trim((string) ($queryParams['q'] ?? ''));
+
+        $id = isset($queryParams['id']) ? (string) $queryParams['id'] : null;
+        $type = ProductType::normalize(isset($queryParams['type']) ? (string) $queryParams['type'] : null);
 
         if ($query === '') {
             return $this->json($response, ['error' => 'Query parameter q is required'], 422);
         }
 
-        $result = $this->searchService->searchProducts($query, $type);
+        $result = $this->searchService->searchProducts($query, $id, $type);
         return $this->json($response, $result);
     }
 }

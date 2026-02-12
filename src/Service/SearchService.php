@@ -6,16 +6,10 @@ namespace App\Service;
 
 use Meilisearch\Client;
 
-final class SearchService
+final readonly class SearchService
 {
-    private Client $client;
-
-    /** @param array<string, mixed> $meiliConfig */
-    public function __construct(array $meiliConfig)
+    public function __construct(private Client $client)
     {
-        $host = (string) ($meiliConfig['host'] ?? 'http://meilisearch:7700');
-        $masterKey = (string) ($meiliConfig['master_key'] ?? 'masterKey123');
-        $this->client = new Client($host, $masterKey);
     }
 
     /** @param array<int, array<string, mixed>> $products */
@@ -23,7 +17,7 @@ final class SearchService
     {
         $index = $this->client->index('products');
 
-        $index->updateFilterableAttributes(['product_type']);
+        $index->updateFilterableAttributes(['id', 'product_type']);
         $index->updateSortableAttributes(['price']);
         $index->updateSearchableAttributes([
             'sku',
@@ -31,7 +25,7 @@ final class SearchService
             'name',
             'description',
             'metadata',
-            'searchable_text',
+            // 'searchable_text',
         ]);
         $index->updateSynonyms([
             'laptop'               => ['portatile', 'notebook'],
@@ -68,15 +62,18 @@ final class SearchService
         return $this->client->tasks->get('products');
     }
 
-    public function searchProducts(string $query, ?string $type = null): array
+    public function searchProducts(string $query, ?string $id = null, ?string $type = null): array
     {
         $index = $this->client->index('products');
 
         $options = [
             'attributesToHighlight' => ['name.en', 'name.it', 'description.en', 'description.it'],
-            'limit'                 => 20,
+            'limit'                 => 10,
         ];
 
+        if ($id !== null && $id !== '') {
+            $options['filter'] = sprintf('id = "%s"', $id);
+        }
         if ($type !== null && $type !== '') {
             $escaped = str_replace('"', '\\"', $type);
             $options['filter'] = sprintf('product_type = "%s"', $escaped);

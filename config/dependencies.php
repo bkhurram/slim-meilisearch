@@ -2,12 +2,15 @@
 
 declare(strict_types=1);
 
+use App\Command\MeiliSearchTaskCommand;
 use App\Command\ProductReindexCommand;
 use App\Core\LocalizationMiddleware;
 use App\Repository\DatabaseConnectionFactory;
+use App\Service\MeiliSearchService;
 use App\Service\ProductService;
 use App\Service\SearchService;
 use DI\Container;
+use Meilisearch\Client as MeilisearchClient;
 use Monolog\Handler\StreamHandler;
 use Monolog\Level;
 use Monolog\Logger;
@@ -41,15 +44,25 @@ return static function (Container $container): void {
 
         return $logger;
     });
+    $container->set(MeilisearchClient::class, static function (ContainerInterface $c) {
+        $host = $c->get('meili')['host'];
+        $masterKey = $c->get('meili')['master_key'];
+
+        return new MeilisearchClient($host, $masterKey);
+    });
 
     $container->set(DatabaseConnectionFactory::class, static fn (ContainerInterface $c) => new DatabaseConnectionFactory((array) $c->get('db')));
     $container->set(ProductService::class, static fn (ContainerInterface $c) => new ProductService($c->get(DatabaseConnectionFactory::class)));
-    $container->set(SearchService::class, static fn (ContainerInterface $c) => new SearchService((array) $c->get('meili')));
+    $container->set(SearchService::class, static fn (ContainerInterface $c) => new SearchService($c->get(MeilisearchClient::class)));
+    $container->set(MeiliSearchService::class, static fn (ContainerInterface $c) => new MeiliSearchService($c->get(MeilisearchClient::class)));
 
     // Commands
     $container->set(ProductReindexCommand::class, static fn (ContainerInterface $c) => new ProductReindexCommand(
         $c->get(ProductService::class),
         $c->get(SearchService::class)
+    ));
+    $container->set(MeiliSearchTaskCommand::class, static fn (ContainerInterface $c) => new MeiliSearchTaskCommand(
+        $c->get(MeiliSearchService::class)
     ));
 
     // Middleware
